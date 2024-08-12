@@ -1,0 +1,66 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+struct Book {
+    int book_id;
+    std::string author_name;
+    double price;
+    int no_of_pages;
+    std::string publisher;
+    int year_of_publishing;
+};
+
+// Custom comparator function to sort books by author name
+bool compareBooks(const Book& a, const Book& b) {
+    return a.author_name < b.author_name;
+}
+
+int main() {
+    // Input file
+    std::ifstream inputFile("input.txt");
+
+    // Check if input file exists
+    if (!inputFile) {
+        std::cerr << "Error: Input file not found." << std::endl;
+        return 1;
+    }
+
+    // Vector to store book details
+    std::vector<Book> books;
+
+    // Read book details from input file
+    Book book;
+    while (inputFile >> book.book_id >> book.author_name >> book.price >> book.no_of_pages >> book.publisher >> book.year_of_publishing) {
+        books.push_back(book);
+    }
+
+    // Close input file
+    inputFile.close();
+
+    // Sort books by author name
+    std::sort(books.begin(), books.end(), compareBooks);
+
+    // Output file
+    std::ofstream outputFile("output.txt");
+
+    // Check if output file can be opened
+    if (!outputFile) {
+        std::cerr << "Error: Unable to open output file." << std::endl;
+        return 1;
+    }
+
+    // Write sorted book details to output file
+    for (const auto& book : books) {
+        outputFile << book.book_id << " " << book.author_name << " " << book.price << " " << book.no_of_pages << " " << book.publisher << " " << book.year_of_publishing << std::endl;
+    }
+
+    // Close output file
+    outputFile.close();
+
+    std::cout << "Books sorted and written to output.txt" << std::endl;
+
+    return 0;
+}
